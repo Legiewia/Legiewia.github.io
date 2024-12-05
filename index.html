@@ -3,9 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Card Collection</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body{
+            padding: 20px 0px;
+        }
+        #product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px; /* Espaciado entre productos */
+            justify-content: flex-start; /* Cambiar de center a flex-start */
+        }
+
+        .product-card {
+            flex: 0 1 calc(50% - 16px); /* Dos productos por fila en pantallas pequeñas */
+            max-width: calc(50% - 16px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        @media (min-width: 768px) {
+            .product-card {
+                flex: 0 1 calc(33.333% - 16px); /* Tres productos por fila en pantallas medianas */
+                max-width: calc(33.333% - 16px);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .product-card {
+                flex: 0 1 calc(25% - 16px); /* Cuatro productos por fila en pantallas grandes */
+                max-width: calc(25% - 16px);
+            }
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            padding: 15px;
+        }
+
+        .product-card .product-info {
+            padding: 16px;
+        }
+
+        .product-card .product-title {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .product-card .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 0 !important;
+        }
+
+        .product-card .product-description{
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 10px !important;
+            background-color: #e2e2e276;
+            border-radius: 20px;
+            display: inline-block;
+            padding: 5px 15px;
+        }
+
+        .product-card .product-quantity {
+            background-color: black;
+            color: white;
+            padding: 5px;
+        }
+
+        .product-card .product-quantity .available-quantity {
+            margin-bottom: 0 !important;
+            font-size: 16px;
+            font-weight: 200;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">One Piece</h1>
+        <div class="form-group">
+            <input type="text" id="search-bar" class="form-control" placeholder="Buscar...">
+        </div>
+        <div id="product-container"></div>
+    </div>
+
+    <script>
+        // JSON con los datos de los productos
+        const products = [
+            {
+                "title": "Vinsmoke Reiju (069)",
+                "description": "OP-06",
+                "image": "imgs/541063_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 4
+            },
+            {
+                "title": "Kaido (SEC)",
+                "description": "OP-05",
+                "image": "imgs/527045_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 1
+            },
+            {
+                "title": "Rebecca (091)",
+                "description": "OP-05",
+                "image": "imgs/528165_in_1000x1000.jpg",
+                "price": "$8.000",
+                "quantity": 1
+            },
+            {
+                "title": "Perona (093)",
+                "description": "OP-06",
+                "image": "imgs/541059_in_1000x1000.jpg",
+                "price": "$2.500",
+                "quantity": 4
+            },
+            {
+                "title": "Monkey.D.Dragon (015)",
+                "description": "OP-07",
+                "image": "imgs/545794_in_1000x1000.jpg",
+                "price": "$8.500",
+                "quantity": 1
+            },
+            {
+                "title": "Kuzan (096)",
+                "description": "OP-02",
+                "image": "imgs/486468_in_1000x1000.jpg",
+                "price": "$5.000",
+                "quantity": 2
+            },
+            {
+                "title": "Kuzan (SEC)",
+                "description": "OP-02",
+                "image": "imgs/594326_in_1000x1000.jpg",
+                "price": "$6.000",
+                "quantity": 1
+            },
+            {
+                "title": "Trafalgar Law (ST-10)",
+                "description": "ST-10",
+                "image": "imgs/594320_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 1
+            },
+            {
+                "title": "Dracule Mihawk (070)",
+                "description": "OP-01",
+                "image": "imgs/594314_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 2
+            },
+            {
+                "title": "Borsalino (114)",
+                "description": "OP-02",
+                "image": "imgs/594324_in_1000x1000.jpg",
+                "price": "$4.000",
+                "quantity": 1
+            },
+            {
+                "title": "Borsalino AA (114)",
+                "description": "OP-02",
+                "image": "imgs/586716_in_1000x1000.jpg",
+                "price": "$16.000",
+                "quantity": 1
+            },
+            {
+                "title": "Stussy (085)",
+                "description": "OP-07",
+                "image": "imgs/545880_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 6
+            },
+            {
+                "title": "Sabo (SEC)",
+                "description": "OP-07",
+                "image": "imgs/545918_in_1000x1000.jpg",
+                "price": "$4.500",
+                "quantity": 2
+            },
+            {
+                "title": "Hina (Best Selection)",
+                "description": "ST-04",
+                "image": "imgs/587225_in_1000x1000.jpg",
+                "price": "$15.000",
+                "quantity": 1
+            },
+            {
+                "title": "Hina (008)",
+                "description": "ST-04",
+                "image": "imgs/486323_in_1000x1000.jpg",
+                "price": "$7.000",
+                "quantity": 2
+            },
+            {
+                "title": "Hina - Judge (008)",
+                "description": "ST-04",
+                "image": "imgs/544625_in_1000x1000.jpg",
+                "price": "$6.000",
+                "quantity": 2
+            },
+            {
+                "title": "Shirahoshi AA (082)",
+                "description": "OP-05",
+                "image": "imgs/593472_in_1000x1000.jpg",
+                "price": "$11.000",
+                "quantity": 1
+            },
+            {
+                "title": "Kaido (003)",
+                "description": "ST-04",
+                "image": "imgs/599813_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 3
+            },
+            {
+                "title": "Eustass \"Captain\" Kid (013)",
+                "description": "ST-10",
+                "image": "imgs/525057_in_1000x1000.jpg",
+                "price": "$7.000",
+                "quantity": 4
+            },
+            {
+                "title": "Queen (005)",
+                "description": "ST-04",
+                "image": "imgs/288278_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 2
+            },
+            {
+                "title": "Basil Hawkins (029)",
+                "description": "OP-07",
+                "image": "imgs/545812_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 3
+            },
+            {
+                "title": "Jewelry Bonney (026)",
+                "description": "OP-07",
+                "image": "imgs/545808_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 1
+            },
+            {
+                "title": "Jinbe (P63)",
+                "description": "PR",
+                "image": "imgs/544796_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 2
+            },
+            {
+                "title": "Eustass \"Captain\" Kid (051)",
+                "description": "OP-01",
+                "image": "imgs/454575_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 1
+            },
+            {
+                "title": "Shanks (007)",
+                "description": "OP-06",
+                "image": "imgs/539282_in_1000x1000.jpg",
+                "price": "$2.500",
+                "quantity": 3
+            },
+            {
+                "title": "Monkey.D.Luffy (024)",
+                "description": "OP-01",
+                "image": "imgs/453508_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 3
+            },
+            {
+                "title": "Monkey.D.Luffy AA (024)",
+                "description": "OP-01",
+                "image": "imgs/586178_in_1000x1000.jpg",
+                "price": "$4.500",
+                "quantity": 1
+            },
+            {
+                "title": "Koala (006)",
+                "description": "OP-05",
+                "image": "imgs/527663_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 2
+            },
+            {
+                "title": "Fire Fist (Best Selection)",
+                "description": "OP-05",
+                "image": "imgs/587227_in_1000x1000.jpg",
+                "price": "$2.500",
+                "quantity": 1
+            },
+            {
+                "title": "Shanks AA (120)",
+                "description": "OP-01",
+                "image": "imgs/586194_in_1000x1000.jpg",
+                "price": "$7.000",
+                "quantity": 1
+            },
+            {
+                "title": "Nami (007)",
+                "description": "ST-01",
+                "image": "imgs/541664_in_1000x1000.jpg",
+                "price": "$25.000",
+                "quantity": 1
+            },
+            {
+                "title": "Makino Full Art (015)",
+                "description": "OP-02",
+                "image": "imgs/593296_in_1000x1000.jpg",
+                "price": "$5.000",
+                "quantity": 1
+            },
+            {
+                "title": "Trafalgar Law (Winner)",
+                "description": "PR",
+                "image": "imgs/548437_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 1
+            },
+            {
+                "title": "Boa Hancock (078)",
+                "description": "OP-01",
+                "image": "imgs/454608_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 1
+            },
+            {
+                "title": "Kouzuki Hiyori (106)",
+                "description": "OP-06",
+                "image": "imgs/539501_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 1
+            },
+            {
+                "title": "Jewelry Bonney (105)",
+                "description": "OP-07",
+                "image": "imgs/558143_in_1000x1000.jpg",
+                "price": "$1.500",
+                "quantity": 1
+            },
+            {
+                "title": "Nami (106)",
+                "description": "OP-08",
+                "image": "imgs/558145_in_1000x1000.jpg",
+                "price": "$9.000",
+                "quantity": 1
+            },
+            {
+                "title": "Satori Full Art (105)",
+                "description": "OP-05",
+                "image": "imgs/593476_in_1000x1000.jpg",
+                "price": "$7.000",
+                "quantity": 1
+            },
+            {
+                "title": "Two-Hundred Million Volts Amaru AA",
+                "description": "OP-05",
+                "image": "imgs/586806_in_1000x1000.jpg",
+                "price": "$12.000",
+                "quantity": 1
+            },
+            {
+                "title": "Roronoa Zoro (013)",
+                "description": "ST-01",
+                "image": "imgs/288242_in_1000x1000.jpg",
+                "price": "$5.000",
+                "quantity": 2
+            },
+            {
+                "title": "Vinsmoke Niji (065)",
+                "description": "OP-06",
+                "image": "imgs/593508_in_1000x1000.jpg",
+                "price": "$25.000",
+                "quantity": 1
+            },
+            {
+                "title": "Rob Lucci (093)",
+                "description": "OP-05",
+                "image": "imgs/528164_in_1000x1000.jpg",
+                "price": "$2.000",
+                "quantity": 1
+            },
+            {
+                "title": "Portgas.D.Ace (011)",
+                "description": "ST-13",
+                "image": "imgs/543613_in_1000x1000.jpg",
+                "price": "$9.000",
+                "quantity": 1
+            },
+            {
+                "title": "Yamato (SEC)",
+                "description": "OP-01",
+                "image": "imgs/454667_in_1000x1000.jpg",
+                "price": "$4.000",
+                "quantity": 1
+            },
+            {
+                "title": "Uta (002)",
+                "description": "ST-08",
+                "image": "imgs/503230_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 1
+            },
+            {
+                "title": "Kaido & Linlin",
+                "description": "OP-08",
+                "image": "imgs/558163_in_1000x1000.jpg",
+                "price": "$3.000",
+                "quantity": 1
+            },
+            {
+                "title": "Capone Gang Bege (Jolly Roger)",
+                "description": "OP-04",
+                "image": "imgs/586483_in_1000x1000.jpg",
+                "price": "$1.000",
+                "quantity": 2
+            },
+            {
+                "title": "Monkey.D.Luffy (015)",
+                "description": "ST-13",
+                "image": "imgs/543617_in_1000x1000.jpg",
+                "price": "$2.500",
+                "quantity": 4
+            },
+        ];
+
+        const productContainer = document.getElementById("product-container");
+        const searchBar = document.getElementById("search-bar");
+
+        // Función para renderizar los productos
+        function renderProducts(filteredProducts) {
+            productContainer.innerHTML = ""; // Limpiar contenedor
+            filteredProducts.forEach(product => {
+                const productCard = `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.title}">
+                        <div class="product-info">
+                            <h5 class="product-title">${product.title}</h5>
+                            <p class="product-description">${product.description}</p>
+                            <p class="product-price">${product.price}</p>
+                        </div>
+                        <div class="product-quantity">
+                            <h5 class="available-quantity">Cantidad: ${product.quantity}</h5>
+                        </div>
+                    </div>
+                `;
+                productContainer.innerHTML += productCard;
+            });
+        }
+
+        // Mostrar todos los productos al inicio
+        renderProducts(products);
+
+        // Evento de búsqueda
+        searchBar.addEventListener("input", (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm.length > 2) {
+                // Filtrar productos si hay 2 letras o más
+                const filteredProducts = products.filter(product =>
+                    product.title.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm)
+                );
+                renderProducts(filteredProducts);
+            } else if (searchTerm.length === 0) {
+                // Mostrar todos los productos si la búsqueda está vacía
+                renderProducts(products);
+                
+            }
+        });
+    </script>
 </body>
 </html>
